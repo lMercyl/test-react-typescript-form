@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/static/css/main.8106a553.css",
-    "main.js": "/static/js/main.e81249a5.js",
-    "static/media/logo.svg": "/static/media/logo.1a2da925b62330e8905be26b7d1bce6c.svg",
-    "index.html": "/index.html",
-    "static/media/arrow.svg": "/static/media/arrow.ed490eb17e711a44df262dc11fb151bc.svg",
-    "main.8106a553.css.map": "/static/css/main.8106a553.css.map",
-    "main.e81249a5.js.map": "/static/js/main.e81249a5.js.map"
+    "main.css": "/test-react-typescript-form/static/css/main.8106a553.css",
+    "main.js": "/test-react-typescript-form/static/js/main.40a2d4cc.js",
+    "static/media/logo.svg": "/test-react-typescript-form/static/media/logo.1a2da925b62330e8905be26b7d1bce6c.svg",
+    "index.html": "/test-react-typescript-form/index.html",
+    "static/media/arrow.svg": "/test-react-typescript-form/static/media/arrow.ed490eb17e711a44df262dc11fb151bc.svg",
+    "main.8106a553.css.map": "/test-react-typescript-form/static/css/main.8106a553.css.map",
+    "main.40a2d4cc.js.map": "/test-react-typescript-form/static/js/main.40a2d4cc.js.map"
   },
   "entrypoints": [
     "static/css/main.8106a553.css",
-    "static/js/main.e81249a5.js"
+    "static/js/main.40a2d4cc.js"
   ]
 }
