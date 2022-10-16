@@ -3,12 +3,18 @@ import { FieldError } from 'react-hook-form';
 import styled from 'styled-components';
 import arrow from '../assets/arrow.svg';
 
+interface Item {
+  id: number;
+  name: string;
+}
+
 interface SelectFieldProps {
   placeholder?: string;
   required?: boolean;
   name?: string;
   error?: FieldError;
   params?: any;
+  data: Array<Item>;
 }
 
 const SelectContainer = styled.div`
@@ -91,22 +97,7 @@ const Error = styled.span`
   color: #eb5e55;
 `;
 
-const data = [
-  {
-    id: 1,
-    name: 'Москва',
-  },
-  {
-    id: 2,
-    name: 'Санкт-Петербург',
-  },
-  {
-    id: 3,
-    name: 'Казань',
-  },
-];
-
-const SelectField = ({ placeholder, required, name, error, params }: SelectFieldProps) => {
+const SelectField = ({ placeholder, required, name, error, params, data }: SelectFieldProps) => {
   const [value, setValue] = React.useState<string>('');
 
   const onChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {

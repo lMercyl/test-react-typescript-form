@@ -6,6 +6,7 @@ import logo from './assets/logo.svg';
 import arrow from './assets/arrow.svg';
 import SelectField from './components/SelectField';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import axios from 'axios';
 
 const Container = styled.div`
   display: flex;
@@ -115,6 +116,29 @@ const App = () => {
   const [hide, setHide] = React.useState<boolean>(false);
   const [disabled, setDisabled] = React.useState<boolean>(false);
   const [status, setStatus] = React.useState<number>(0);
+  const [dataForm, setDataForm] = React.useState<any>({
+    cities: [],
+    source: [],
+  });
+
+  const fetchCity = async () => {
+    try {
+      const { data } = await axios.get(`https://61a54a844c822c0017042179.mockapi.io/cities`);
+      console.log(data);
+      setDataForm({ ...dataForm, cities: data });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const fetchSource = async () => {
+    try {
+      const { data } = await axios.get('https://61a54a844c822c0017042179.mockapi.io/source');
+      setDataForm({ ...dataForm, source: data });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const {
     register,
@@ -129,6 +153,16 @@ const App = () => {
       setStatus(1);
     }, 2000);
   };
+
+  React.useEffect(() => {
+    fetchCity();
+  }, []);
+
+  React.useEffect(() => {
+    if (dataForm.source.length === 0) {
+      fetchSource();
+    }
+  }, [dataForm]);
 
   React.useEffect(() => {
     if (status !== 0) {
@@ -158,82 +192,91 @@ const App = () => {
           предложение к Вашему проекту или изображениям.
         </Text>
       </FlexText>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        {status === 0 ? (
-          <FlexForm>
-            <GridForm>
-              <TextField
-                params={register('name', { required: true, minLength: 2 })}
-                name="name"
-                label="Ваше имя"
-                placeholder="Иван"
-                error={errors.name}
-              />
-              <TextField
-                params={register('phone', { required: true })}
-                name="phone"
-                label="Номер телефона"
-                placeholder="+7 (000) 000-00-00"
-                error={errors.phone}
-              />
-              <TextField
-                params={register('email', { required: true, pattern: /.+@.+\..+/ })}
-                name="email"
-                label="E-mail"
-                placeholder="example@skdesign.ru"
-                error={errors.email}
-              />
-              <TextField
-                params={register('url', { required: true, minLength: 3 })}
-                name="profile"
-                label="Ссылка на профиль"
-                placeholder="instagram.com/skde…"
-                error={errors.url}
-              />
-            </GridForm>
-            <SelectField
-              params={register('city', { required: true })}
-              name="city"
-              placeholder="Выберите город"
-              error={errors.city}
-            />
-            <TextField
-              params={register('company')}
-              name="company"
-              label="Название организации/студии"
-              placeholder="SK Design"
-            />
-            <FlexList>
-              <Text>Скрыть дополнительные поля</Text>
-              <img
-                onClick={() => setHide(!hide)}
-                style={{ cursor: 'pointer', transform: hide ? 'none' : 'rotate(180deg)' }}
-                height={6}
-                src={arrow}
-                alt="Кнопка доп. информации"
-              />
-            </FlexList>
-            {hide && (
-              <>
+      {dataForm.cities.length !== 0 && dataForm.source.length !== 0 ? (
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          {status === 0 ? (
+            <FlexForm>
+              <GridForm>
                 <TextField
-                  params={register('recipient')}
-                  name="recipient"
-                  label="Получатель"
-                  placeholder="ФИО"
+                  params={register('name', { required: true, minLength: 2 })}
+                  name="name"
+                  label="Ваше имя"
+                  placeholder="Иван"
+                  error={errors.name}
                 />
-                <SelectField
-                  params={register('source')}
-                  name="source"
-                  placeholder="Откуда вы узнали про нас?"
+                <TextField
+                  params={register('phone', {
+                    required: true,
+                    pattern: /^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/,
+                  })}
+                  name="phone"
+                  label="Номер телефона"
+                  placeholder="+7 (000) 000-00-00"
+                  error={errors.phone}
                 />
-              </>
-            )}
-            <Button disabled={disabled}>Отправить заявку</Button>
-          </FlexForm>
-        ) : (
-          <Span>Спасибо что уделили время</Span>
-        )}
-      </Form>
+                <TextField
+                  params={register('email', { required: true, pattern: /.+@.+\..+/ })}
+                  name="email"
+                  label="E-mail"
+                  placeholder="example@skdesign.ru"
+                  error={errors.email}
+                />
+                <TextField
+                  params={register('url', { required: true, minLength: 3 })}
+                  name="profile"
+                  label="Ссылка на профиль"
+                  placeholder="instagram.com/skde…"
+                  error={errors.url}
+                />
+              </GridForm>
+              <SelectField
+                data={dataForm.cities}
+                params={register('city', { required: true })}
+                name="city"
+                placeholder="Выберите город"
+                error={errors.city}
+              />
+              <TextField
+                params={register('company')}
+                name="company"
+                label="Название организации/студии"
+                placeholder="SK Design"
+              />
+              <FlexList>
+                <Text>Скрыть дополнительные поля</Text>
+                <img
+                  onClick={() => setHide(!hide)}
+                  style={{ cursor: 'pointer', transform: hide ? 'none' : 'rotate(180deg)' }}
+                  height={6}
+                  src={arrow}
+                  alt="Кнопка доп. информации"
+                />
+              </FlexList>
+              {hide && (
+                <>
+                  <TextField
+                    params={register('recipient')}
+                    name="recipient"
+                    label="Получатель"
+                    placeholder="ФИО"
+                  />
+                  <SelectField
+                    data={dataForm.source}
+                    params={register('source')}
+                    name="source"
+                    placeholder="Откуда вы узнали про нас?"
+                  />
+                </>
+              )}
+              <Button disabled={disabled}>Отправить заявку</Button>
+            </FlexForm>
+          ) : (
+            <Span>Спасибо что уделили время</Span>
+          )}
+        </Form>
+      ) : (
+        <Span>Загрузка...</Span>
+      )}
     </Container>
   );
 };
